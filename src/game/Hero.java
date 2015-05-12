@@ -10,7 +10,7 @@ package game;
 
 import Creature.Creature;
 import Creature.Enemy;
-import DataStorage.HeroDataStorage;
+import DataStorage.*;
 import Items.Weapon;
 import java.util.Random;
 import java.util.Timer;
@@ -33,6 +33,7 @@ public class Hero extends Creature {
 
     private Timer timer;
     private Enemy enemy;
+    private FightController fc;
 
     public Hero(String heroName, int heroBaseHp, int heroSpeed, int heroGold, int heroBaseDamage, int heroLevel, int heroEXP, int heroType, int heroCurrentHP, int heroID) {
 
@@ -117,9 +118,12 @@ public class Hero extends Creature {
 
     public void basicAttack(Weapon weapon, Enemy enemy) {
 
-        //enemy.setHp(enemy.getHp());
-        System.out.println("You damaged enemy with a attack that damaged " + (getBaseDamage() + getWeaponRandomDamage()) + "To ");
-        heroTimeStop();
+        this.enemy = FightingDataStorage.getInstance().getEnemy1();
+        System.err.println(this.enemy);
+        this.enemy.setHp(this.enemy.getHp() - 1);
+        System.err.println(this.enemy.getHp());
+        FightingDataStorage.getInstance().setEnemy1(this.enemy);
+       //fc.healthPaneScaler();
     }
 
     public int getWeaponRandomDamage() {

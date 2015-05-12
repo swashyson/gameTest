@@ -11,6 +11,7 @@ import Creature.Wolf;
 import Creature.*;
 import DataStorage.HeroDataStorage;
 import DataStorage.EnemyDataStorage;
+import DataStorage.FightingDataStorage;
 import java.net.URL;
 import java.util.Random;
 import java.util.ResourceBundle;
@@ -94,8 +95,6 @@ public class FightController implements Initializable {
         
             createCreaturePane(creature, creaturePaneWitdh, creaturePaneHeight, creaturePaneX, creaturePaneY);
             pane.getChildren().add(creaturePane1);
-            pane.getChildren().add(creaturePane2);
-            pane.getChildren().add(creaturePane3);
         
 
     }
@@ -126,39 +125,42 @@ public class FightController implements Initializable {
 
         // Ska vara en random generator här beroende på vilken lvl osv man är
         
-        Random rand = new Random();
-        int numberCreature = rand.nextInt(2)+1;
-        System.out.print("antal djur" + numberCreature);
-        for(int i =0; i <numberCreature;i++){
-            int whatCreature = rand.nextInt(4)+1;
-            
-            
-                if(whatCreature == 1 ){
-                    enemy = new Bear("Bear",1,1,1,1);
-                    spawnCreature("Recourses/Bear.png", 40, 60, 730, 500); // spawna en fiende på dessa positionerna med en pane
-                    System.out.printf("skapar en " + whatCreature);
-                }
-                else if(whatCreature == 2 ){
-                    enemy = new Scorpion("Scorpion",1,1,1,1);
-                    spawnCreature("Recourses/Warrior.png", 40, 60, 730, 500); // spawna en fiende på dessa positionerna med en pane
-                    System.out.printf("skapar en " + whatCreature);
-                }
-                else if(whatCreature == 3 ){
-                    enemy = new Snake("Snake",1,1,1,1);
-                    spawnCreature("Recourses/RangerChar.png", 40, 60, 730, 500); // spawna en fiende på dessa positionerna med en pane
-                    System.out.printf("skapar en " + whatCreature);
-                }
-                else if(whatCreature == 4 ){
-                    enemy = new Spider("Spider",1,1,1,1);
-                    spawnCreature("Recourses/Bear.png", 40, 60, 730, 500); // spawna en fiende på dessa positionerna med en pane
-                    System.out.printf("skapar en " + whatCreature);
-                }
-                else if(whatCreature == 5 ){
-                    enemy = new Wolf("Wolf",1,1,1,1);
-                    spawnCreature("Recourses/Bear.png", 40, 60, 730, 500); // spawna en fiende på dessa positionerna med en pane
-                    System.out.printf("skapar en " + whatCreature);
-                }
-        }
+        enemy = new Bear("Bear",10,1,1,1);
+        FightingDataStorage.getInstance().setEnemy1(enemy);
+        spawnCreature("Recourses/Bear.png", 40, 60, 730, 500); // spawna en fiende på dessa positionerna med en pane
+//        Random rand = new Random();
+//        int numberCreature = rand.nextInt(2)+1;
+//        System.out.print("antal djur" + numberCreature);
+//        for(int i =0; i <numberCreature;i++){
+//            int whatCreature = rand.nextInt(4)+1;
+//            
+//            
+//                if(whatCreature == 1 ){
+//                    enemy = new Bear("Bear",1,1,1,1);
+//                    spawnCreature("Recourses/Bear.png", 40, 60, 730, 500); // spawna en fiende på dessa positionerna med en pane
+//                    System.out.printf("skapar en " + whatCreature);
+//                }
+//                else if(whatCreature == 2 ){
+//                    enemy = new Scorpion("Scorpion",1,1,1,1);
+//                    spawnCreature("Recourses/Warrior.png", 40, 60, 730, 500); // spawna en fiende på dessa positionerna med en pane
+//                    System.out.printf("skapar en " + whatCreature);
+//                }
+//                else if(whatCreature == 3 ){
+//                    enemy = new Snake("Snake",1,1,1,1);
+//                    spawnCreature("Recourses/RangerChar.png", 40, 60, 730, 500); // spawna en fiende på dessa positionerna med en pane
+//                    System.out.printf("skapar en " + whatCreature);
+//                }
+//                else if(whatCreature == 4 ){
+//                    enemy = new Spider("Spider",1,1,1,1);
+//                    spawnCreature("Recourses/Bear.png", 40, 60, 730, 500); // spawna en fiende på dessa positionerna med en pane
+//                    System.out.printf("skapar en " + whatCreature);
+//                }
+//                else if(whatCreature == 5 ){
+//                    enemy = new Wolf("Wolf",1,1,1,1);
+//                    spawnCreature("Recourses/Bear.png", 40, 60, 730, 500); // spawna en fiende på dessa positionerna med en pane
+//                    System.out.printf("skapar en " + whatCreature);
+//                }
+//        }
         
         
     }
