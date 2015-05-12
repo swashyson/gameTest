@@ -5,22 +5,30 @@
  */
 package game;
 
-import Creature.Enemy;
 import Creature.Bear;
+import Creature.Enemy;
 import DataStorage.HeroDataStorage;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.util.Duration;
 
 /**
  * FXML Controller class
@@ -42,13 +50,11 @@ public class FightController implements Initializable {
     private int heroEXP;
     public int timerCounter = 0;
     public String[] fightOrder;
-    private Enemy[] enemys;  
+    private Enemy[] enemys;
     private Hero heroChar;
     private Enemy enemy;
 
-    AnchorPane creaturePane1;
-    AnchorPane creaturePane2;
-    AnchorPane creaturePane3;
+    private ArrayList<ImageView> test = new ArrayList();
 
     @FXML
     public void goToCity(ActionEvent event) {
@@ -67,6 +73,7 @@ public class FightController implements Initializable {
         XPBAR();
         whatHeroToLoad();
         fight();
+        worldTime();
 
     }
 
@@ -77,15 +84,15 @@ public class FightController implements Initializable {
 
     }
 
-    public void spawnCreature(String URL, int creaturePaneWitdh, int creaturePaneHeight, int creaturePaneX, int creaturePaneY) {
+    public void spawnCreature(String URL, int creaturePaneWitdh, int creaturePaneHeight, int creaturePaneX, int creaturePaneY, String ID) {
 
         ImageView creature = new ImageView();
+        creature.setId(ID);
         Image creatureDisplay = new Image(getClass().getResourceAsStream(URL));
         creature.setImage(creatureDisplay);
-        
-            createCreaturePane(creature, creaturePaneWitdh, creaturePaneHeight, creaturePaneX, creaturePaneY);
-            pane.getChildren().add(creaturePane1);
-        
+
+        createCreaturePane(creature, creaturePaneWitdh, creaturePaneHeight, creaturePaneX, creaturePaneY, ID, null);
+        //pane.getChildren().add(creatureAnchor);
 
     }
 
@@ -110,79 +117,68 @@ public class FightController implements Initializable {
     public void createEnemy() {
 
         // Ska vara en random generator här beroende på vilken lvl osv man är
-        
         Random rand = new Random();
-        int numberCreature = rand.nextInt(1)+2;
+        int numberCreature = rand.nextInt(1) + 2;
         System.out.print("antal djur" + numberCreature);
-        for(int i =1; i <=numberCreature;i++){
-            int whatCreature = rand.nextInt(1)+1;
-            
-            for(int a = 1; a <= whatCreature; a++){
-                if(a == 1 ){
-                    enemy = new Bear("Bear",1,1,1,1);
-                    spawnCreature("Recourses/Bear.png", 40, 60, 730, 500); // spawna en fiende på dessa positionerna med en pane
+        for (int i = 1; i <= numberCreature; i++) {
+            int whatCreature = rand.nextInt(1) + 1;
+
+            for (int a = 1; a <= whatCreature; a++) {
+                if (a == 1) {
+                    //enemy = new Bear("Bear", 1, 1, 1, 1);
+                    spawnCreature("Recourses/Bear.png", 40, 60, 730, 500, "Bear"); // spawna en fiende på dessa positionerna med en pane
                     System.out.printf("skapar en " + whatCreature);
                 }
-        }
-        
+            }
+
         }
     }
 
-    public void createCreaturePane(ImageView creature, int creaturePaneWitdh, int creaturePaneHeight, int creaturePaneX, int creaturePaneY) {
+    public void createCreaturePane(ImageView creature, int creaturePaneWitdh, int creaturePaneHeight, int creaturePaneX, int creaturePaneY, String ID, ImageView image) {
 
-        creaturePane1 =  new AnchorPane();
-        creaturePane2 =  new AnchorPane();
-        creaturePane3 =  new AnchorPane();
-        if(creaturePane1.getChildren().isEmpty()){
-        creaturePane1.prefWidth(creaturePaneWitdh);
-        creaturePane1.prefHeight(creaturePaneHeight); //Storlek på pane
-        creaturePane1.setLayoutX(creaturePaneX);
-        creaturePane1.setLayoutY(creaturePaneY);
-        ImageView hpBarCreature1 = new ImageView();
-        Image imageHealthCreature1 = new Image(getClass().getResourceAsStream("Recourses/HealthBar.png"));
-        hpBarCreature1.setImage(imageHealthCreature1);
+        switch (ID) {
+            case "Hero": {
+                AnchorPane creaturePane1 = new AnchorPane();
+                creaturePane1.prefWidth(creaturePaneWitdh);
+                creaturePane1.prefHeight(creaturePaneHeight); //Storlek på pane
+                creaturePane1.setLayoutX(creaturePaneX);
+                creaturePane1.setLayoutY(creaturePaneY);
+                ImageView hpBarCreature1 = new ImageView();
+                Image imageHealthCreature1 = new Image(getClass().getResourceAsStream("Recourses/HealthBar.png"));
+                hpBarCreature1.setImage(imageHealthCreature1);
+                pane.getChildren().add(creaturePane1);
+                creaturePane1.getChildren().add(hpBarCreature1);
+                creaturePane1.getChildren().add(creature);
 
-        creaturePane1.getChildren().add(hpBarCreature1);
-        creaturePane1.getChildren().add(creature);
+                hpBarCreature1.setScaleX(healthPaneHeroScaler());
+                hpBarCreature1.setX(healthPaneHeroScaler() / 2);
+                break;
+            }
+            case "Bear": {
+                AnchorPane creaturePane1 = new AnchorPane();
+                creaturePane1.prefWidth(creaturePaneWitdh);
+                creaturePane1.prefHeight(creaturePaneHeight); //Storlek på pane
+                creaturePane1.setLayoutX(creaturePaneX);
+                creaturePane1.setLayoutY(creaturePaneY);
+                ImageView hpBarCreature1 = new ImageView();
+                Image imageHealthCreature1 = new Image(getClass().getResourceAsStream("Recourses/HealthBar.png"));
+                hpBarCreature1.setImage(imageHealthCreature1);
+                pane.getChildren().add(creaturePane1);
+                creaturePane1.getChildren().add(hpBarCreature1);
+                creaturePane1.getChildren().add(creature);
 
-        hpBarCreature1.setScaleX(healthPaneScaler());
-        hpBarCreature1.setX(healthPaneScaler() / 2);
-        }
-        else if(creaturePane2.getChildren().isEmpty()){
-            
-            creaturePane2.prefWidth(creaturePaneWitdh);
-            creaturePane2.prefHeight(creaturePaneHeight); //Storlek på pane
-            creaturePane2.setLayoutX(creaturePaneX);
-            creaturePane2.setLayoutY(creaturePaneY);
-            ImageView hpBarCreature2 = new ImageView();
-            Image imageHealthCreature2 = new Image(getClass().getResourceAsStream("Recourses/HealthBar.png"));
-            hpBarCreature2.setImage(imageHealthCreature2);
+                hpBarCreature1.setScaleX(healthPaneEnemyScaler());
+                hpBarCreature1.setX(healthPaneEnemyScaler() / 2);
 
-            creaturePane2.getChildren().add(hpBarCreature2);
-            creaturePane2.getChildren().add(creature);
+                test.add(hpBarCreature1);
 
-            hpBarCreature2.setScaleX(healthPaneScaler());
-            hpBarCreature2.setX(healthPaneScaler() / 2);
-        }
-        else if(creaturePane3.getChildren().isEmpty()){
-            creaturePane3.prefWidth(creaturePaneWitdh);
-            creaturePane3.prefHeight(creaturePaneHeight); //Storlek på pane
-            creaturePane3.setLayoutX(creaturePaneX);
-            creaturePane3.setLayoutY(creaturePaneY);
-            ImageView hpBarCreature3 = new ImageView();
-            Image imageHealthCreature3 = new Image(getClass().getResourceAsStream("Recourses/HealthBar.png"));
-            hpBarCreature3.setImage(imageHealthCreature3);
-
-            creaturePane3.getChildren().add(hpBarCreature3);
-            creaturePane3.getChildren().add(creature);
-
-            hpBarCreature3.setScaleX(healthPaneScaler());
-            hpBarCreature3.setX(healthPaneScaler() / 2);
+                break;
+            }
         }
 
     }
 
-    public int healthPaneScaler() {
+    public int healthPaneHeroScaler() {
 
         int currentHP = HeroDataStorage.getInstance().getHero().getHeroCurrentHP();
         int maxHP = HeroDataStorage.getInstance().getHero().getHp();
@@ -192,6 +188,21 @@ public class FightController implements Initializable {
 
         calculate = (currentHP * maxImageView) / maxHP; // Fullt fungerande, bara till alla kalla metoden varje tick
         return calculate;
+
+    }
+
+    public int healthPaneEnemyScaler() {
+
+        int maxHP = DataStorage.EnemyDataStorage.getInstance().getBear().getHp();
+        int currentHP = DataStorage.EnemyDataStorage.getInstance().getBear().getHp();
+        int maxImageView = 50;
+
+        int calculate;
+
+        calculate = maxHP - 5; // Fullt fungerande, bara till alla kalla metoden varje tick
+        System.out.println("Pane size" + calculate);
+        return calculate;
+
     }
 
     public void healthPaneSetPosX() {
@@ -203,18 +214,41 @@ public class FightController implements Initializable {
 
         if (HeroDataStorage.getInstance().getHero().getHeroType() == 1) {
 
-            spawnCreature("Recourses/WarriorChar.png", 40, 60, 30, 500);
+            spawnCreature("Recourses/WarriorChar.png", 40, 60, 30, 500, "Hero");
 
         } else if (HeroDataStorage.getInstance().getHero().getHeroType() == 2) {
 
-            spawnCreature("Recourses/RangerChar.png", 40, 60, 30, 500);
+            spawnCreature("Recourses/RangerChar.png", 40, 60, 30, 500, "Hero");
 
         } else if (HeroDataStorage.getInstance().getHero().getHeroType() == 3) {
 
-            spawnCreature("Recourses/MageChar.png", 40, 60, 30, 500);
+            spawnCreature("Recourses/MageChar.png", 40, 60, 30, 500, "Hero");
 
         }
 
+    }
+
+    public void refreshValues() {
+
+        test.get(0).setScaleX(healthPaneEnemyScaler());
+        test.get(0).setX(healthPaneEnemyScaler() / 2);
+
+        test.get(1).setScaleX(healthPaneEnemyScaler());
+        test.get(1).setX(healthPaneEnemyScaler() / 2); // det finns två björnar på varandra....????
+    }
+
+    public void doSomething() {
+        System.out.println("World time Tic Toc");
+        refreshValues();
+
+        System.out.println("Number of bears = " + test.size());
+    }
+
+    public void worldTime() {
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(500),
+                ae -> doSomething()));
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.play();
     }
 
 }
