@@ -116,7 +116,7 @@ public class Hero extends Creature {
 
     }
 
-    public void basicAttack(Weapon weapon, Enemy enemy) {
+    public void basicAttack(Weapon weapon) {
 
         this.enemy = FightingDataStorage.getInstance().getEnemy1();
         System.err.println(this.enemy);
@@ -153,7 +153,7 @@ public class Hero extends Creature {
 
             @Override
             public void run() {;                                                //Attack!;
-                basicAttack(HeroDataStorage.getInstance().getWeapon(), enemy); // måste få in värderna från enemy
+                basicAttack(HeroDataStorage.getInstance().getWeapon()); // måste få in värderna från enemy
             }
         }, 3000 - speed - getWeaponSpeed() * 2, 3000 - speed * -getWeaponSpeed() - 2); //Time tick speeden, desto snabbare speed man har desto snabbare slår man helt enkelt
         //Beräknar med basic speed och weaponSpeed, och en konstant * (multiplier*2)
