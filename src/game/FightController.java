@@ -62,10 +62,7 @@ public class FightController implements Initializable {
     private Snake snake;
     private Spider spider;
     private Wolf wolf;
-    AnchorPane creaturePane1;
-    AnchorPane creaturePane2;
-    AnchorPane creaturePane3;
-
+    private ArrayList<ImageView> test = new ArrayList();
     @FXML
     public void goToCity(ActionEvent event) {
 
@@ -103,7 +100,7 @@ public class FightController implements Initializable {
         creature.setImage(creatureDisplay);
 
         createCreaturePane(creature, creaturePaneWitdh, creaturePaneHeight, creaturePaneX, creaturePaneY, ID, null);
-        //pane.getChildren().add(creatureAnchor);
+        pane.getChildren().add(creature);
 
     }
 
@@ -135,7 +132,7 @@ public class FightController implements Initializable {
         
         enemy = new Bear("Bear",10,1,1,1);
         FightingDataStorage.getInstance().setEnemy1(enemy);
-        spawnCreature("Recourses/Bear.png", 40, 60, 730, 500); // spawna en fiende på dessa positionerna med en pane
+        spawnCreature("Recourses/Bear.png", 40, 60, 730, 500,"Bear"); // spawna en fiende på dessa positionerna med en pane
 //        Random rand = new Random();
 //        int numberCreature = rand.nextInt(2)+1;
 //        System.out.print("antal djur" + numberCreature);
@@ -271,16 +268,13 @@ public class FightController implements Initializable {
 
         test.get(0).setScaleX(healthPaneEnemyScaler());
         test.get(0).setX(healthPaneEnemyScaler() / 2);
-
-        test.get(1).setScaleX(healthPaneEnemyScaler());
-        test.get(1).setX(healthPaneEnemyScaler() / 2); // det finns två björnar på varandra....????
     }
 
     public void doSomething() {
         System.out.println("World time Tic Toc");
         refreshValues();
 
-        System.out.println("Number of bears = " + test.size());
+        System.out.println("Number of bears = ");
     }
 
     public void worldTime() {
